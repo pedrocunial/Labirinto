@@ -64,7 +64,7 @@ public class LabyrinthGenerator {
 			edges[index] = edges[length - 1];
 		}
 
-    	boolean[][] labyrinth = new boolean[2 * HEIGHT - 1][2 * WIDTH - 1];
+    	final boolean[][] labyrinth = new boolean[2 * HEIGHT - 1][2 * WIDTH - 1];
 
 		for(i = 0; i < HEIGHT; i++) {
 			for(j = 0; j < WIDTH; j++) {
