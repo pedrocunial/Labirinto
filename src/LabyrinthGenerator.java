@@ -9,8 +9,8 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 public class LabyrinthGenerator {
-	private static final int WIDTH = 15;
-	private static final int HEIGHT = 10;
+	private static final int WIDTH = 20;
+	private static final int HEIGHT = 15;
 
     public static void main(String[] args) {
     	int i, j;
@@ -104,6 +104,7 @@ public class LabyrinthGenerator {
 		}
 
 		writer.close();
+		System.out.println(labyrinth[1][0]);
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -115,6 +116,7 @@ public class LabyrinthGenerator {
                 frame.setContentPane(screen);
                 frame.pack();
                 frame.setVisible(true);
+                frame.addKeyListener(screen);
             }
         });
     }
