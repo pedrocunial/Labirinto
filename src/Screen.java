@@ -72,6 +72,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 		setPreferredSize(new Dimension(this.width * CELL_SIZE, this.height * CELL_SIZE));
 
+//		botAI();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -95,7 +96,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		// Por fim, desenhamos a imagem.
     	g.drawImage(image, xBoneco - SIZE / 2, yBoneco - SIZE / 2, SIZE, SIZE, null);
     	g.drawImage(imageBot, xBot - SIZE / 2, yBot - SIZE / 2, SIZE, SIZE, null);
-
+    	
+    	botAI();
+    	
     	getToolkit().sync();
     }
     
@@ -147,16 +150,63 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	}    	
 	}
     
-//	public void botAI() {
-//		Stack<Crumb> stack = new Stack<Crumb>();
-//		stack.push(new Crumb(nodes[0])));
+	public void botAI() {
+		Node nodes[][] = new Node[height][width];
+		
+		for(int i = 0; i >= height; i++) {
+			for(int j = 0; j >= width; j++) {
+				nodes[i][j] = new Node(i, j);
+				
+			}
+		}
+
+		
+//		para testes
 //		
-//		while(!stack.empty()) {
-//			Crumb crumb = new Crumb(stack.peek());
-//			
-//			
+//		
+//		for (int i = 0; i < nodes.length; i++) {
+//		    for (int j = 0; j < nodes[0].length; j++) {
+//		        System.out.print(nodes[i][j] + " ");
+//		    }
+//		    System.out.print("\n");
 //		}
-//	}
+//		
+		Stack<Crumb> stack = new Stack<Crumb>();
+		stack.push(new Crumb(nodes[xBot][yBot]));
+		
+		while(!stack.empty()) {
+			Crumb crumb = new Crumb(stack.peek().getNode());
+			
+			if (crumb.getNode().getLeft() != null && labyrinth[yBot][xBot-1]) {
+				Crumb crumb2 = new Crumb(crumb.getNode().getLeft());
+				crumb.getNode().setLeft(null);
+				stack.push(crumb2);
+				xBot--;
+				
+			} else if (crumb.getNode().getRight() != null && labyrinth[yBot][xBot+1]) {
+				Crumb crumb2 = new Crumb(crumb.getNode().getRight());
+				crumb.getNode().setRight(null);
+				stack.push(crumb2);
+				xBot++;
+				
+			} else if (crumb.getNode().getUp() != null && labyrinth[yBot-1][xBot]) {
+				Crumb crumb2 = new Crumb(crumb.getNode().getRight());
+				crumb.getNode().setRight(null);
+				stack.push(crumb2);
+				yBot--;
+				
+			} else if (crumb.getNode().getDown() != null && labyrinth[yBot+1][xBot]) {
+				Crumb crumb2 = new Crumb(crumb.getNode().getRight());
+				crumb.getNode().setRight(null);
+				stack.push(crumb2);
+				yBot++;
+				
+			} else {
+				stack.pop();
+				
+			}
+		}
+	}
 	
 	public void keyReleased(KeyEvent event) {
 	}
