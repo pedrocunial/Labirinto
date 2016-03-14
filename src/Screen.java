@@ -20,13 +20,13 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	private final static int CELL_SIZE = 25;
 	
 	private static final int SIZE = CELL_SIZE;
-	private static final int BORDER = 0;
+//	private static final int BORDER = 0;
 
 	private int width;
 	private int height;
 
-	private int xLeft;
-	private int xRight;
+//	private int xLeft;
+//	private int xRight;
 
 	private int xBoneco;
 	private int yBoneco;
@@ -41,19 +41,17 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 		this.width = this.labyrinth[0].length;
 		this.height = this.labyrinth.length;
-		
-		xLeft = BORDER + SIZE / 2;
-		xRight = 2 * BORDER + 3 * SIZE / 2;
 
-		xBoneco = xLeft;
-		yBoneco = BORDER + SIZE / 2;
+		xBoneco = SIZE / 2;
+		yBoneco = SIZE / 2;
 		
-		image = new ImageIcon(getClass().getResource("/img/example.png")).getImage();
+		image = new ImageIcon(getClass().getResource("/img/fabiomiranda.png")).getImage();
 
 		Timer timer = new Timer(1000, this);
 		timer.start();
 
 		setPreferredSize(new Dimension(this.width * CELL_SIZE, this.height * CELL_SIZE));
+
 	}
 
 	public void paintComponent(Graphics g) {
@@ -84,44 +82,56 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     
 	public void keyPressed(KeyEvent e) {
     	int key = e.getKeyCode();
-
+    	int xPos = (xBoneco - SIZE / 2) / SIZE;
+    	int yPos = (yBoneco - SIZE / 2) / SIZE;
+		System.out.println(xPos);
+		System.out.println(yPos);    	    	
+    	
     	// Se a tecla apertada foi a seta para a esquerda...
     	if(key == KeyEvent.VK_LEFT) {
-    		// ...movemos o boneco para a esquerda...
-    		xBoneco -= SIZE;
-    		// ...e redesenhamos a tela.
-    		repaint();
+	    	// checamos se ele pode ir para a direção desejada	
+    		if(xPos != 0 && labyrinth[yPos][xPos-1]) {
+	    		// ...movemos o boneco para a esquerda...
+	    		xBoneco -= SIZE;
+	    		// ...e redesenhamos a tela.
+	    		repaint();
+    		}
     	}
 
     	// Se a tecla apertada foi a seta para a direita...
     	if(key == KeyEvent.VK_RIGHT) {
-    		// ...movemos o boneco para a direita!
-    		xBoneco += SIZE;
-    		// ...e redesenhamos a tela.
-    		repaint();
+    		// podemos ir para direita?
+    		if(xPos != width && labyrinth[yPos][xPos+1]) {
+	    		// ...movemos o boneco para a direita!
+	    		xBoneco += SIZE;
+	    		// ...e redesenhamos a tela.
+	    		repaint();
+	    	}
     	}
     	
     	if(key == KeyEvent.VK_DOWN) {
-    		// ...movemos o boneco para a direita!
-    		yBoneco += SIZE;
-    		// ...e redesenhamos a tela.
-    		repaint();
+    		// para baixo...
+    		if(yPos != height && labyrinth[yPos+1][xPos]) {
+	    		// movemos para baixo
+	    		yBoneco += SIZE;
+	    		repaint();
+	    	}
     	}
     	
     	if(key == KeyEvent.VK_UP) {
-    		// ...movemos o boneco para a direita!
-    		yBoneco -= SIZE;
-    		// ...e redesenhamos a tela.
-    		repaint();
+    		// para cima!
+    		if(yPos != 0 && labyrinth[yPos-1][xPos]) {
+	    		// movemos para baixo
+	    		yBoneco -= SIZE;
+	    		repaint();
+	    	}
     	}
-    	
     	
 	}
     
     public void keyReleased(KeyEvent event) {
 	}
 	
-	// N�o � necess�rio entender essa parte por enquanto.
 	public void keyTyped(KeyEvent event) {
 	}
 
