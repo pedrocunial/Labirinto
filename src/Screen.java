@@ -21,16 +21,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	private final static int CELL_SIZE = 25;
 	
 	private static final int SIZE = CELL_SIZE;
-//	private static final int BORDER = 0;
 
 	private int width;
 	private int height;
 
-//	private int xLeft;
-//	private int xRight;
-
 	private int xBoneco;
 	private int yBoneco;
+
+	private int xBot;
+	private int yBot;
+
 	
 	public int getxBot() {
 		return xBot;
@@ -40,9 +40,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		return yBot;
 	}
 
-	private int xBot;
-	private int yBot;
-
+	
 	private Image image;
 	private Image imageBot;
 
@@ -93,11 +91,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 
+    	
 		// Por fim, desenhamos a imagem.
     	g.drawImage(image, xBoneco - SIZE / 2, yBoneco - SIZE / 2, SIZE, SIZE, null);
     	g.drawImage(imageBot, xBot - SIZE / 2, yBot - SIZE / 2, SIZE, SIZE, null);
-    	
-    	botAI();
     	
     	getToolkit().sync();
     }
@@ -106,9 +103,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	int key = e.getKeyCode();
     	int xPos = (xBoneco - SIZE / 2) / SIZE;
     	int yPos = (yBoneco - SIZE / 2) / SIZE;
-		System.out.println(xPos);
-		System.out.println(yPos);    	    	
-    	
+   	
     	// Se a tecla apertada foi a seta para a esquerda...
     	if(key == KeyEvent.VK_LEFT) {
 	    	// checamos se ele pode ir para a direção desejada	
@@ -150,62 +145,61 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	}    	
 	}
     
-	public void botAI() {
-		Node nodes[][] = new Node[height][width];
-		
-		for(int i = 0; i >= height; i++) {
-			for(int j = 0; j >= width; j++) {
-				nodes[i][j] = new Node(i, j);
-				
-			}
-		}
-
-		
-//		para testes
-//		
-//		
-//		for (int i = 0; i < nodes.length; i++) {
-//		    for (int j = 0; j < nodes[0].length; j++) {
-//		        System.out.print(nodes[i][j] + " ");
-//		    }
-//		    System.out.print("\n");
-//		}
-//		
+	public int[] botAI() {
+		int xPos = (xBot - SIZE / 2) / SIZE;
+    	int yPos = (yBot - SIZE / 2) / SIZE;
 		Stack<Crumb> stack = new Stack<Crumb>();
-		stack.push(new Crumb(nodes[xBot][yBot]));
-		
+		stack.push(new Crumb(xPos, yPos));
+
 		while(!stack.empty()) {
-			Crumb crumb = new Crumb(stack.peek().getNode());
+			int[] local = {this.xBot, this.yBot};
+			yPos = stack.peek().getY();
+			xPos = stack.peek().getX();
 			
-			if (crumb.getNode().getLeft() != null && labyrinth[yBot][xBot-1]) {
-				Crumb crumb2 = new Crumb(crumb.getNode().getLeft());
-				crumb.getNode().setLeft(null);
-				stack.push(crumb2);
-				xBot--;
+			if(labyrinth[yPos][xPos-1] && stack.peek().getPasses() == 0 && xPos > 0) {
+				// Esquerda
+				xPos--;
+				xBot -= SIZE;
+				stack.push(new Crumb(xPos, yPos));
+				local[0] = xBot;
+				System.out.println("0");
 				
-			} else if (crumb.getNode().getRight() != null && labyrinth[yBot][xBot+1]) {
-				Crumb crumb2 = new Crumb(crumb.getNode().getRight());
-				crumb.getNode().setRight(null);
-				stack.push(crumb2);
-				xBot++;
+			} else if(labyrinth[yPos][xPos+1] && stack.peek().getPasses() == 1 && (xPos < width)) {
+				// Direita
+				xPos++;
+				xBot += SIZE;
+				stack.push(new Crumb(xPos, yPos));				
+				local[0] = xBot;
+				System.out.println("1");
 				
-			} else if (crumb.getNode().getUp() != null && labyrinth[yBot-1][xBot]) {
-				Crumb crumb2 = new Crumb(crumb.getNode().getRight());
-				crumb.getNode().setRight(null);
-				stack.push(crumb2);
-				yBot--;
+			} else if(labyrinth[yPos-1][xPos] && stack.peek().getPasses() == 2 && yPos > 0) {
+				// Cima
+				yPos--;
+				yBot -= SIZE;
+				stack.push(new Crumb(xPos, yPos));
+				local[1] = yBot;
+				System.out.println("2");
 				
-			} else if (crumb.getNode().getDown() != null && labyrinth[yBot+1][xBot]) {
-				Crumb crumb2 = new Crumb(crumb.getNode().getRight());
-				crumb.getNode().setRight(null);
-				stack.push(crumb2);
-				yBot++;
+			} else if(labyrinth[yPos+1][xPos] && stack.peek().getPasses() == 3 && (yPos < height)) {
+				// Baixo
+				yPos++;
+				yBot += SIZE;
+				stack.push(new Crumb(xPos, yPos));
+				local[1] = yBot;
+				System.out.println("3");
 				
 			} else {
 				stack.pop();
 				
 			}
+				
+			stack.peek().incrementPasses();
+			return local;
 		}
+
+		int[] local = {this.xBot, this.yBot};
+		return local;
+	
 	}
 	
 	public void keyReleased(KeyEvent event) {
@@ -216,7 +210,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		xBot = botAI()[0];
+		yBot = botAI()[1];
 	}
 }
