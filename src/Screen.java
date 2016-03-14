@@ -30,8 +30,12 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 	private int xBoneco;
 	private int yBoneco;
+	
+	private int xBot;
+	private int yBot;
 
 	private Image image;
+	private Image imageBot;
 
 
 	private boolean[][] labyrinth;
@@ -45,8 +49,15 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		xBoneco = SIZE / 2;
 		yBoneco = SIZE / 2;
 		
+		xBot = width * 25 - SIZE / 2;
+		yBot = SIZE / 2;
+		System.out.println(xBot);
+		System.out.println(yBot);
+		
 		image = new ImageIcon(getClass().getResource("/img/fabiomiranda.png")).getImage();
+		imageBot = new ImageIcon(getClass().getResource("/img/example.png")).getImage();
 
+		
 		Timer timer = new Timer(1000, this);
 		timer.start();
 
@@ -71,11 +82,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 				g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 			}
 		}
-//		g.setColor(Color.WHITE);
-//		g.fillRect(0, 0, width, height);
 
 		// Por fim, desenhamos a imagem.
     	g.drawImage(image, xBoneco - SIZE / 2, yBoneco - SIZE / 2, SIZE, SIZE, null);
+    	g.drawImage(imageBot, xBot - SIZE / 2, yBot - SIZE / 2, SIZE, SIZE, null);
 
     	getToolkit().sync();
     }
@@ -121,12 +131,11 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	if(key == KeyEvent.VK_UP) {
     		// para cima!
     		if(yPos != 0 && labyrinth[yPos-1][xPos]) {
-	    		// movemos para baixo
+	    		// movemos para cima
 	    		yBoneco -= SIZE;
 	    		repaint();
 	    	}
-    	}
-    	
+    	}    	
 	}
     
     public void keyReleased(KeyEvent event) {

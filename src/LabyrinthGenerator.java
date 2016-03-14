@@ -110,7 +110,7 @@ public class LabyrinthGenerator {
             public void run() {
                 Screen screen = new Screen(labyrinth);
 
-                JFrame frame = new JFrame("Labyrinth Generator");
+                JFrame frame = new JFrame("#TEAMIRON");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setResizable(false);
                 frame.setContentPane(screen);
