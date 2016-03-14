@@ -56,7 +56,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		xBoneco = SIZE / 2;
 		yBoneco = SIZE / 2;
 		
-		xBot = width * 25 - SIZE / 2;
+		xBot = SIZE / 2;
 		yBot = SIZE / 2;
 		System.out.println(xBot);
 		System.out.println(yBot);
@@ -70,7 +70,6 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 		setPreferredSize(new Dimension(this.width * CELL_SIZE, this.height * CELL_SIZE));
 
-//		botAI();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -146,124 +145,100 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	}
     
 	public int[] botAI() {
+		// Inteligencia artificial
 		int xPos = (xBot - SIZE / 2) / SIZE;
     	int yPos = (yBot - SIZE / 2) / SIZE;
 		Stack<Crumb> stack = new Stack<Crumb>();
 		stack.push(new Crumb(xPos, yPos));
-
+		int[] local = {this.xBot, this.yBot};
+		
 		while(!stack.empty()) {
-			int[] local = {this.xBot, this.yBot};
 			yPos = stack.peek().getY();
 			xPos = stack.peek().getX();
 			
 			if(stack.peek().getPasses() == 0) {
-				if(!labyrinth[yPos][xPos-1]){
-					stack.peek().incrementPasses();
-				} else {
-					if(xPos > 0) {
+				if(xPos > 0) {
+					if(!labyrinth[yPos][xPos-1]) {
+						stack.peek().incrementPasses();
+					} else {
 						// Esquerda
 						xPos--;
 						xBot -= SIZE;
 						stack.push(new Crumb(xPos, yPos));
 						local[0] = xBot;
-						System.out.println("0");
+						System.out.println(labyrinth[yPos][xPos-1]);
 						stack.peek().incrementPasses();
 					}
+				} else { 
+					stack.peek().incrementPasses();
 				}
 			}
 			
 			if(stack.peek().getPasses() == 1) {
-				if(!labyrinth[yPos][xPos+1]){
-					stack.peek().incrementPasses();
-				} else {
-					if(xPos < width) {
-						// Direita
+				if(xPos < width) {
+					if(!labyrinth[yPos][xPos+1]) {
+						stack.peek().incrementPasses();
+					} else {
+						// Esquerda
 						xPos++;
 						xBot += SIZE;
 						stack.push(new Crumb(xPos, yPos));
 						local[0] = xBot;
-						System.out.println("1");
+						System.out.println("bar");
 						stack.peek().incrementPasses();
 					}
+				} else { 
+					stack.peek().incrementPasses();
 				}
 			}
 			
-			if(stack.peek().getPasses() == 0) {
-				if(!labyrinth[yPos-1][xPos]){
-					stack.peek().incrementPasses();
-				} else {
-					if(yPos > 0) {
-						// Cima
+			if(stack.peek().getPasses() == 2) {
+				if(yPos > 0) {
+					if(!labyrinth[yPos-1][xPos]) {
+						stack.peek().incrementPasses();
+					} else {
+						// Esquerda
 						yPos--;
 						yBot -= SIZE;
 						stack.push(new Crumb(xPos, yPos));
 						local[1] = yBot;
-						System.out.println("0");
+						System.out.println("fuzz");
 						stack.peek().incrementPasses();
 					}
+				} else { 
+					stack.peek().incrementPasses();
 				}
 			}
-			
-			if(stack.peek().getPasses() == 0) {
-				if(!labyrinth[yPos+1][xPos]){
-					stack.peek().incrementPasses();
-				} else {
-					if(yPos < height) {
-						// Baixo
+
+			if(stack.peek().getPasses() == 3) {
+				if(xPos < height) {
+					if(!labyrinth[yPos+1][xPos]) {
+						stack.peek().incrementPasses();
+					} else {
+						// Esquerda
 						yPos++;
 						yBot += SIZE;
 						stack.push(new Crumb(xPos, yPos));
 						local[1] = yBot;
-						System.out.println("0");
+						System.out.println("buzz");
 						stack.peek().incrementPasses();
 					}
+				} else { 
+					stack.peek().incrementPasses();
 				}
 			}
 			
-//			if(labyrinth[yPos][xPos-1] && stack.peek().getPasses() == 0 && xPos > 0) {
-//				// Esquerda
-//				xPos--;
-//				xBot -= SIZE;
-//				stack.push(new Crumb(xPos, yPos));
-//				local[0] = xBot;
-//				System.out.println("0");
-//				
-//			} else if(labyrinth[yPos][xPos+1] && stack.peek().getPasses() == 1 && (xPos < width)) {
-//				// Direita
-//				xPos++;
-//				xBot += SIZE;
-//				stack.push(new Crumb(xPos, yPos));				
-//				local[0] = xBot;
-//				System.out.println("1");
-//				
-//			} else if(labyrinth[yPos-1][xPos] && stack.peek().getPasses() == 2 && yPos > 0) {
-//				// Cima
-//				yPos--;
-//				yBot -= SIZE;
-//				stack.push(new Crumb(xPos, yPos));
-//				local[1] = yBot;
-//				System.out.println("2");
-//				
-//			} else if(labyrinth[yPos+1][xPos] && stack.peek().getPasses() == 3 && (yPos < height)) {
-//				// Baixo
-//				yPos++;
-//				yBot += SIZE;
-//				stack.push(new Crumb(xPos, yPos));
-//				local[1] = yBot;
-//				System.out.println("3");
-//				
-//			} else {
-//				stack.pop();
-//				
-//			}
-				
-			stack.peek().incrementPasses();
+			if(stack.peek().getPasses() == 4) {
+				stack.pop();
+				System.out.println("foobar-fuzzbuzz");
+			}
+			
 			return local;
 		}
-
-		int[] local = {this.xBot, this.yBot};
+		
+		System.out.println("TEMINEI");
 		return local;
-	
+		
 	}
 	
 	public void keyReleased(KeyEvent event) {
