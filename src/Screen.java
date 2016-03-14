@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Stack;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -31,6 +32,14 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	private int xBoneco;
 	private int yBoneco;
 	
+	public int getxBot() {
+		return xBot;
+	}
+
+	public int getyBot() {
+		return yBot;
+	}
+
 	private int xBot;
 	private int yBot;
 
@@ -138,7 +147,18 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	}    	
 	}
     
-    public void keyReleased(KeyEvent event) {
+//	public void botAI() {
+//		Stack<Crumb> stack = new Stack<Crumb>();
+//		stack.push(new Crumb(nodes[0])));
+//		
+//		while(!stack.empty()) {
+//			Crumb crumb = new Crumb(stack.peek());
+//			
+//			
+//		}
+//	}
+	
+	public void keyReleased(KeyEvent event) {
 	}
 	
 	public void keyTyped(KeyEvent event) {
