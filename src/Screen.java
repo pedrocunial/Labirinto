@@ -156,42 +156,106 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 			yPos = stack.peek().getY();
 			xPos = stack.peek().getX();
 			
-			if(labyrinth[yPos][xPos-1] && stack.peek().getPasses() == 0 && xPos > 0) {
-				// Esquerda
-				xPos--;
-				xBot -= SIZE;
-				stack.push(new Crumb(xPos, yPos));
-				local[0] = xBot;
-				System.out.println("0");
-				
-			} else if(labyrinth[yPos][xPos+1] && stack.peek().getPasses() == 1 && (xPos < width)) {
-				// Direita
-				xPos++;
-				xBot += SIZE;
-				stack.push(new Crumb(xPos, yPos));				
-				local[0] = xBot;
-				System.out.println("1");
-				
-			} else if(labyrinth[yPos-1][xPos] && stack.peek().getPasses() == 2 && yPos > 0) {
-				// Cima
-				yPos--;
-				yBot -= SIZE;
-				stack.push(new Crumb(xPos, yPos));
-				local[1] = yBot;
-				System.out.println("2");
-				
-			} else if(labyrinth[yPos+1][xPos] && stack.peek().getPasses() == 3 && (yPos < height)) {
-				// Baixo
-				yPos++;
-				yBot += SIZE;
-				stack.push(new Crumb(xPos, yPos));
-				local[1] = yBot;
-				System.out.println("3");
-				
-			} else {
-				stack.pop();
-				
+			if(stack.peek().getPasses() == 0) {
+				if(!labyrinth[yPos][xPos-1]){
+					stack.peek().incrementPasses();
+				} else {
+					if(xPos > 0) {
+						// Esquerda
+						xPos--;
+						xBot -= SIZE;
+						stack.push(new Crumb(xPos, yPos));
+						local[0] = xBot;
+						System.out.println("0");
+						stack.peek().incrementPasses();
+					}
+				}
 			}
+			
+			if(stack.peek().getPasses() == 1) {
+				if(!labyrinth[yPos][xPos+1]){
+					stack.peek().incrementPasses();
+				} else {
+					if(xPos < width) {
+						// Direita
+						xPos++;
+						xBot += SIZE;
+						stack.push(new Crumb(xPos, yPos));
+						local[0] = xBot;
+						System.out.println("1");
+						stack.peek().incrementPasses();
+					}
+				}
+			}
+			
+			if(stack.peek().getPasses() == 0) {
+				if(!labyrinth[yPos-1][xPos]){
+					stack.peek().incrementPasses();
+				} else {
+					if(yPos > 0) {
+						// Cima
+						yPos--;
+						yBot -= SIZE;
+						stack.push(new Crumb(xPos, yPos));
+						local[1] = yBot;
+						System.out.println("0");
+						stack.peek().incrementPasses();
+					}
+				}
+			}
+			
+			if(stack.peek().getPasses() == 0) {
+				if(!labyrinth[yPos+1][xPos]){
+					stack.peek().incrementPasses();
+				} else {
+					if(yPos < height) {
+						// Baixo
+						yPos++;
+						yBot += SIZE;
+						stack.push(new Crumb(xPos, yPos));
+						local[1] = yBot;
+						System.out.println("0");
+						stack.peek().incrementPasses();
+					}
+				}
+			}
+			
+//			if(labyrinth[yPos][xPos-1] && stack.peek().getPasses() == 0 && xPos > 0) {
+//				// Esquerda
+//				xPos--;
+//				xBot -= SIZE;
+//				stack.push(new Crumb(xPos, yPos));
+//				local[0] = xBot;
+//				System.out.println("0");
+//				
+//			} else if(labyrinth[yPos][xPos+1] && stack.peek().getPasses() == 1 && (xPos < width)) {
+//				// Direita
+//				xPos++;
+//				xBot += SIZE;
+//				stack.push(new Crumb(xPos, yPos));				
+//				local[0] = xBot;
+//				System.out.println("1");
+//				
+//			} else if(labyrinth[yPos-1][xPos] && stack.peek().getPasses() == 2 && yPos > 0) {
+//				// Cima
+//				yPos--;
+//				yBot -= SIZE;
+//				stack.push(new Crumb(xPos, yPos));
+//				local[1] = yBot;
+//				System.out.println("2");
+//				
+//			} else if(labyrinth[yPos+1][xPos] && stack.peek().getPasses() == 3 && (yPos < height)) {
+//				// Baixo
+//				yPos++;
+//				yBot += SIZE;
+//				stack.push(new Crumb(xPos, yPos));
+//				local[1] = yBot;
+//				System.out.println("3");
+//				
+//			} else {
+//				stack.pop();
+//				
+//			}
 				
 			stack.peek().incrementPasses();
 			return local;
