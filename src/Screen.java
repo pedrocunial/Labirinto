@@ -190,19 +190,19 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	public void actionPerformed(ActionEvent arg0) {	
 		System.out.println("xMeme: " + xMeme + " yMeme: " + yMeme);
 		try {
-			
-			if((xBoneco - SIZE / 2) == xMeme && (yBoneco - SIZE / 2) == yMeme) {
-				timer.stop();
+			// Caso a stack esteja vazia, ele não passará pelo erro graças à este try
+			if(xMeme == (xBoneco - SIZE / 2) && yMeme == (yBoneco - SIZE / 2)) {
 				System.out.println("Você ganhou! Parabéns!");
+				timer.stop();
 			}
 			
-			else if((xBot - SIZE / 2) == xMeme && (yBoneco - SIZE / 2) == yMeme) {
-				timer.stop();
+			else if(xMeme == (xBot - SIZE / 2) && yMeme == (yBot - SIZE / 2)) {
 				System.out.println("HHAHAH VOCÊ PERDEU!");
+				timer.stop();
 			} 
 			
 			else {				
-				// Try de andar pelo labirinto
+				// "Anda" pelo labirinto
 				Crumb crumb = stack.peek();
 				
 				if(stack.peek().getPasses() == 0) {
