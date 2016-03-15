@@ -51,10 +51,12 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 
 	private boolean[][] labyrinth;
+	private boolean[][] labirinto;
 
 	public Screen(boolean[][] labyrinth) {
 		this.labyrinth = labyrinth;
-
+		labirinto = deepCopy(labyrinth);
+		
 		this.width = this.labyrinth[0].length;
 		this.height = this.labyrinth.length;
 
@@ -73,7 +75,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	int yPos = (yBot - SIZE / 2) / SIZE;
 
 		stack.push(new Crumb(xPos, yPos));
-		labyrinth[yPos][xPos] = false;	
+		labirinto[yPos][xPos] = false;	
 		
 		Timer timer = new Timer(10, this);
 		timer.start();
@@ -89,7 +91,10 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 			for(int j = 0; j < this.width; j++) {
 				int x = j * CELL_SIZE;
 
-				if(labyrinth[i][j]) {
+				if(!labirinto[i][j] && labyrinth[i][j]) {
+					g.setColor(Color.PINK);
+				}
+				else if(labyrinth[i][j]) {
 					g.setColor(Color.WHITE);
 				}
 				else {
@@ -117,7 +122,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	if(key == KeyEvent.VK_LEFT) {
 	    	// checamos se ele pode ir para a direção desejada	
     		if(xPos != 0 && labyrinth[yPos][xPos-1]) {
-	    		// ...movemos o boneco para a esquerda...
+	    		// ...movemos o boneco para a esBLACKquerda...
 	    		xBoneco -= SIZE;
 	    		// ...e redesenhamos a tela.
 	    		repaint();
@@ -163,13 +168,12 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-//		boolean[][] labirinto = deepCopy(labyrinth);
 		Crumb crumb = stack.peek();
 		
 		if(stack.peek().getPasses() == 0) {
-			if(xPos > 0 && labyrinth[yPos][xPos-1]) {
+			if(xPos > 0 && labirinto[yPos][xPos-1]) {
 				// Esquerda
-				labyrinth[yPos][xPos] = false;
+				labirinto[yPos][xPos] = false;
 				xPos--;
 				System.out.println(stack.peek().getPasses() + " Esquerda " + stack.size());
 				stack.push(new Crumb(xPos, yPos));
@@ -180,9 +184,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		
 		
 		else if(stack.peek().getPasses() == 1) {
-			if(xPos < width-1 && labyrinth[yPos][xPos+1]) {
+			if(xPos < width-1 && labirinto[yPos][xPos+1]) {
 				// Direita
-				labyrinth[yPos][xPos] = false;
+				labirinto[yPos][xPos] = false;
 				xPos++;
 				System.out.println(stack.peek().getPasses() + " Direita " + stack.size());
 				stack.push(new Crumb(xPos, yPos));
@@ -193,9 +197,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		
 		
 		else if(stack.peek().getPasses() == 2) {
-			if(yPos > 0 && labyrinth[yPos-1][xPos]) {
+			if(yPos > 0 && labirinto[yPos-1][xPos]) {
 				// Cima
-				labyrinth[yPos][xPos] = false;
+				labirinto[yPos][xPos] = false;
 				yPos--;
 				System.out.println(stack.peek().getPasses() + " Cima " + stack.size());
 				stack.push(new Crumb(xPos, yPos));
@@ -206,9 +210,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 		
 		else if(stack.peek().getPasses() == 3) {
-			if(yPos < height-1 && labyrinth[yPos+1][xPos]) {
+			if(yPos < height-1 && labirinto[yPos+1][xPos]) {
 				// Baixo
-				labyrinth[yPos][xPos] = false;
+				labirinto[yPos][xPos] = false;
 				yPos++;
 				System.out.println(stack.peek().getPasses() + " Baixo " + stack.size());
 				stack.push(new Crumb(xPos, yPos));
@@ -220,7 +224,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		
 		else if(stack.peek().getPasses() == 4){
 			// Terminou este passo
-			labyrinth[yPos][xPos] = false;
+			labirinto[yPos][xPos] = false;
 			stack.pop();
 			System.out.println(stack.size());
 			xPos = stack.peek().getX();
