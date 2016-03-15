@@ -110,7 +110,7 @@ public class LabyrinthGenerator {
             public void run() {
                 Screen screen = new Screen(labyrinth);
 
-                JFrame frame = new JFrame("#TEAMIRON");
+                JFrame frame = new JFrame("Onde está o Python?");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setResizable(false);
                 frame.setContentPane(screen);

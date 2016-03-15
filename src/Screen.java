@@ -90,7 +90,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 					
 		image = new ImageIcon(getClass().getResource("/img/fabiomiranda.png")).getImage();
 		imageBot = new ImageIcon(getClass().getResource("/img/example.png")).getImage();
-		meme = new ImageIcon(getClass().getResource("/img/coolface.jpg")).getImage();
+		meme = new ImageIcon(getClass().getResource("/img/python-logo.png")).getImage();
 		
 		int xPos = (xBot - SIZE / 2) / SIZE;
     	int yPos = (yBot - SIZE / 2) / SIZE;
@@ -111,13 +111,13 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 				int x = j * CELL_SIZE;
 
 				if(!labirinto[i][j] && labyrinth[i][j]) {
-					g.setColor(Color.RED);
+					g.setColor(Color.YELLOW);
 				}
 				else if(labyrinth[i][j]) {
 					g.setColor(Color.WHITE);
 				}
 				else {
-					g.setColor(Color.BLACK);
+					g.setColor(Color.BLUE);
 				}
 
 				g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
@@ -126,9 +126,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
     	
 		// Por fim, desenhamos a imagem.
-    	g.drawImage(image, xBoneco - SIZE / 2, yBoneco - SIZE / 2, SIZE, SIZE, null);
-    	g.drawImage(imageBot, xBot - SIZE / 2, yBot - SIZE / 2, SIZE, SIZE, null);
     	g.drawImage(meme, xMeme, yMeme, SIZE, SIZE, null);
+		g.drawImage(image, xBoneco - SIZE / 2, yBoneco - SIZE / 2, SIZE, SIZE, null);
+    	g.drawImage(imageBot, xBot - SIZE / 2, yBot - SIZE / 2, SIZE, SIZE, null);
     	
     	getToolkit().sync();
     }
@@ -188,7 +188,6 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {	
-		System.out.println("xMeme: " + xMeme + " yMeme: " + yMeme);
 		try {
 			// Caso a stack esteja vazia, ele não passará pelo erro graças à este try
 			if(xMeme == (xBoneco - SIZE / 2) && yMeme == (yBoneco - SIZE / 2)) {
@@ -270,9 +269,6 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 				
 				yBot = yPos * SIZE + SIZE / 2;
 				xBot = xPos * SIZE + SIZE / 2;
-				
-				System.out.println(yBot - SIZE / 2);
-				System.out.println(xBot - SIZE / 2);
 		
 			}
 		} catch(EmptyStackException e) {
