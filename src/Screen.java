@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
+import java.util.EmptyStackException;
 import java.util.Stack;
 
 import javax.swing.ImageIcon;
@@ -132,7 +133,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	// Se a tecla apertada foi a seta para a direita...
     	if(key == KeyEvent.VK_RIGHT) {
     		// podemos ir para direita?
-    		if(xPos != width && labyrinth[yPos][xPos+1]) {
+    		if(xPos != width-1 && labyrinth[yPos][xPos+1]) {
 	    		// ...movemos o boneco para a direita!
 	    		xBoneco += SIZE;
 	    		// ...e redesenhamos a tela.
@@ -142,7 +143,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
     	
     	if(key == KeyEvent.VK_DOWN) {
     		// para baixo...
-    		if(yPos != height && labyrinth[yPos+1][xPos]) {
+    		if(yPos != height-1 && labyrinth[yPos+1][xPos]) {
 	    		// movemos para baixo
 	    		yBoneco += SIZE;
 	    		repaint();
@@ -167,77 +168,83 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		Crumb crumb = stack.peek();
-		
-		if(stack.peek().getPasses() == 0) {
-			if(xPos > 0 && labirinto[yPos][xPos-1]) {
-				// Esquerda
-				labirinto[yPos][xPos] = false;
-				xPos--;
-				System.out.println(stack.peek().getPasses() + " Esquerda " + stack.size());
-				stack.push(new Crumb(xPos, yPos));
-				repaint();
+	public void actionPerformed(ActionEvent arg0) {	
+		try {
+			
+			Crumb crumb = stack.peek();
+			
+			if(stack.peek().getPasses() == 0) {
+				if(xPos > 0 && labirinto[yPos][xPos-1]) {
+					// Esquerda
+					labirinto[yPos][xPos] = false;
+					xPos--;
+					System.out.println(stack.peek().getPasses() + " Esquerda " + stack.size());
+					stack.push(new Crumb(xPos, yPos));
+					repaint();
+				}
+				crumb.incrementPasses();
+			}			
+			
+			
+			else if(stack.peek().getPasses() == 1) {
+				if(xPos < width-1 && labirinto[yPos][xPos+1]) {
+					// Direita
+					labirinto[yPos][xPos] = false;
+					xPos++;
+					System.out.println(stack.peek().getPasses() + " Direita " + stack.size());
+					stack.push(new Crumb(xPos, yPos));
+					repaint();
+				}
+				crumb.incrementPasses();
 			}
-			crumb.incrementPasses();
-		}			
-		
-		
-		else if(stack.peek().getPasses() == 1) {
-			if(xPos < width-1 && labirinto[yPos][xPos+1]) {
-				// Direita
-				labirinto[yPos][xPos] = false;
-				xPos++;
-				System.out.println(stack.peek().getPasses() + " Direita " + stack.size());
-				stack.push(new Crumb(xPos, yPos));
-				repaint();
+			
+			
+			else if(stack.peek().getPasses() == 2) {
+				if(yPos > 0 && labirinto[yPos-1][xPos]) {
+					// Cima
+					labirinto[yPos][xPos] = false;
+					yPos--;
+					System.out.println(stack.peek().getPasses() + " Cima " + stack.size());
+					stack.push(new Crumb(xPos, yPos));
+					repaint();
+				}
+				crumb.incrementPasses();
 			}
-			crumb.incrementPasses();
-		}
-		
-		
-		else if(stack.peek().getPasses() == 2) {
-			if(yPos > 0 && labirinto[yPos-1][xPos]) {
-				// Cima
-				labirinto[yPos][xPos] = false;
-				yPos--;
-				System.out.println(stack.peek().getPasses() + " Cima " + stack.size());
-				stack.push(new Crumb(xPos, yPos));
-				repaint();
-			}
-			crumb.incrementPasses();
-		}
-
-		
-		else if(stack.peek().getPasses() == 3) {
-			if(yPos < height-1 && labirinto[yPos+1][xPos]) {
-				// Baixo
-				labirinto[yPos][xPos] = false;
-				yPos++;
-				System.out.println(stack.peek().getPasses() + " Baixo " + stack.size());
-				stack.push(new Crumb(xPos, yPos));
-				repaint();
-			}
-			crumb.incrementPasses();
-		}
-		
-		
-		else if(stack.peek().getPasses() == 4){
-			// Terminou este passo
-			labirinto[yPos][xPos] = false;
-			stack.pop();
-			System.out.println(stack.size());
-			xPos = stack.peek().getX();
-			yPos = stack.peek().getY();
-
-			repaint();
-		}
-		
-		yBot = yPos * SIZE + SIZE / 2;
-		xBot = xPos * SIZE + SIZE / 2;
-		
-	}
 	
+			
+			else if(stack.peek().getPasses() == 3) {
+				if(yPos < height-1 && labirinto[yPos+1][xPos]) {
+					// Baixo
+					labirinto[yPos][xPos] = false;
+					yPos++;
+					System.out.println(stack.peek().getPasses() + " Baixo " + stack.size());
+					stack.push(new Crumb(xPos, yPos));
+					repaint();
+				}
+				crumb.incrementPasses();
+			}
+			
+			
+			else if(stack.peek().getPasses() == 4){
+				// Terminou este passo
+				labirinto[yPos][xPos] = false;
+				stack.pop();
+				System.out.println(stack.size());
+				xPos = stack.peek().getX();
+				yPos = stack.peek().getY();
+	
+				repaint();
+			}
+			
+			yBot = yPos * SIZE + SIZE / 2;
+			xBot = xPos * SIZE + SIZE / 2;
+			
+		} catch(EmptyStackException e) {
+			// Caso a stack esteja vazia, isso significa que a IA já varreu todos os pontos do labirinto
+			System.out.println("Já varri todas as opções existentes nesse labirinto!");
+		
+		}
+	}	
 	public static boolean[][] deepCopy(boolean[][] original) {
 	    // Hash, me desculpe, mas roubei este método de um generoso 
 		// senhor que ensinava como copiar os valores de uma matriz
@@ -255,4 +262,5 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	    }
 	    return result;
 	}
-}
+}	
+	
