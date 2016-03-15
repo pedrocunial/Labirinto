@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Stack;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -36,6 +37,9 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	private int xPos;
 	private int yPos;
 	
+	private int xMeme;
+	private int yMeme;
+		
 	Stack<Crumb> stack = new Stack<Crumb>();
 	
 	public int getxBot() {
@@ -45,14 +49,16 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 	public int getyBot() {
 		return yBot;
 	}
-
 	
 	private Image image;
 	private Image imageBot;
-
+	private Image meme;
+	
 
 	private boolean[][] labyrinth;
 	private boolean[][] labirinto;
+	
+	Timer timer = new Timer(10, this);
 
 	public Screen(boolean[][] labyrinth) {
 		this.labyrinth = labyrinth;
@@ -66,23 +72,35 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		
 		xBot = SIZE / 2;
 		yBot = SIZE / 2;
-		System.out.println(xBot);
-		System.out.println(yBot);
 		
+		Random r = new Random();
+		
+		while(true) {
+			xMeme = r.nextInt(this.width);
+			yMeme = r.nextInt(this.height);
+						
+			if(labyrinth[yMeme][xMeme]) {
+				break;
+			}
+		}
+		
+		xMeme = xMeme * SIZE;
+		yMeme = yMeme * SIZE;
+		System.out.println("xMeme: " + xMeme + " yMeme: " + yMeme);
+					
 		image = new ImageIcon(getClass().getResource("/img/fabiomiranda.png")).getImage();
 		imageBot = new ImageIcon(getClass().getResource("/img/example.png")).getImage();
-
+		meme = new ImageIcon(getClass().getResource("/img/coolface.jpg")).getImage();
+		
 		int xPos = (xBot - SIZE / 2) / SIZE;
     	int yPos = (yBot - SIZE / 2) / SIZE;
 
 		stack.push(new Crumb(xPos, yPos));
 		labirinto[yPos][xPos] = false;	
 		
-		Timer timer = new Timer(10, this);
 		timer.start();
-
+		
 		setPreferredSize(new Dimension(this.width * CELL_SIZE, this.height * CELL_SIZE));
-
 	}
 
 	public void paintComponent(Graphics g) {
@@ -93,7 +111,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 				int x = j * CELL_SIZE;
 
 				if(!labirinto[i][j] && labyrinth[i][j]) {
-					g.setColor(Color.PINK);
+					g.setColor(Color.RED);
 				}
 				else if(labyrinth[i][j]) {
 					g.setColor(Color.WHITE);
@@ -110,6 +128,7 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		// Por fim, desenhamos a imagem.
     	g.drawImage(image, xBoneco - SIZE / 2, yBoneco - SIZE / 2, SIZE, SIZE, null);
     	g.drawImage(imageBot, xBot - SIZE / 2, yBot - SIZE / 2, SIZE, SIZE, null);
+    	g.drawImage(meme, xMeme, yMeme, SIZE, SIZE, null);
     	
     	getToolkit().sync();
     }
@@ -169,82 +188,100 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {	
+		System.out.println("xMeme: " + xMeme + " yMeme: " + yMeme);
 		try {
 			
-			Crumb crumb = stack.peek();
-			
-			if(stack.peek().getPasses() == 0) {
-				if(xPos > 0 && labirinto[yPos][xPos-1]) {
-					// Esquerda
-					labirinto[yPos][xPos] = false;
-					xPos--;
-					System.out.println(stack.peek().getPasses() + " Esquerda " + stack.size());
-					stack.push(new Crumb(xPos, yPos));
-					repaint();
-				}
-				crumb.incrementPasses();
-			}			
-			
-			
-			else if(stack.peek().getPasses() == 1) {
-				if(xPos < width-1 && labirinto[yPos][xPos+1]) {
-					// Direita
-					labirinto[yPos][xPos] = false;
-					xPos++;
-					System.out.println(stack.peek().getPasses() + " Direita " + stack.size());
-					stack.push(new Crumb(xPos, yPos));
-					repaint();
-				}
-				crumb.incrementPasses();
+			if((xBoneco - SIZE / 2) == xMeme && (yBoneco - SIZE / 2) == yMeme) {
+				timer.stop();
+				System.out.println("Você ganhou! Parabéns!");
 			}
 			
+			else if((xBot - SIZE / 2) == xMeme && (yBoneco - SIZE / 2) == yMeme) {
+				timer.stop();
+				System.out.println("HHAHAH VOCÊ PERDEU!");
+			} 
 			
-			else if(stack.peek().getPasses() == 2) {
-				if(yPos > 0 && labirinto[yPos-1][xPos]) {
-					// Cima
+			else {				
+				// Try de andar pelo labirinto
+				Crumb crumb = stack.peek();
+				
+				if(stack.peek().getPasses() == 0) {
+					if(xPos > 0 && labirinto[yPos][xPos-1]) {
+						// Esquerda
+						labirinto[yPos][xPos] = false;
+						xPos--;
+						System.out.println(stack.peek().getPasses() + " Esquerda " + stack.size());
+						stack.push(new Crumb(xPos, yPos));
+						repaint();
+					}
+					crumb.incrementPasses();
+				}			
+				
+				
+				else if(stack.peek().getPasses() == 1) {
+					if(xPos < width-1 && labirinto[yPos][xPos+1]) {
+						// Direita
+						labirinto[yPos][xPos] = false;
+						xPos++;
+						System.out.println(stack.peek().getPasses() + " Direita " + stack.size());
+						stack.push(new Crumb(xPos, yPos));
+						repaint();
+					}
+					crumb.incrementPasses();
+				}
+				
+				
+				else if(stack.peek().getPasses() == 2) {
+					if(yPos > 0 && labirinto[yPos-1][xPos]) {
+						// Cima
+						labirinto[yPos][xPos] = false;
+						yPos--;
+						System.out.println(stack.peek().getPasses() + " Cima " + stack.size());
+						stack.push(new Crumb(xPos, yPos));
+						repaint();
+					}
+					crumb.incrementPasses();
+				}
+		
+				
+				else if(stack.peek().getPasses() == 3) {
+					if(yPos < height-1 && labirinto[yPos+1][xPos]) {
+						// Baixo
+						labirinto[yPos][xPos] = false;
+						yPos++;
+						System.out.println(stack.peek().getPasses() + " Baixo " + stack.size());
+						stack.push(new Crumb(xPos, yPos));
+						repaint();
+					}
+					crumb.incrementPasses();
+				}
+				
+				
+				else if(stack.peek().getPasses() == 4){
+					// Terminou este passo
 					labirinto[yPos][xPos] = false;
-					yPos--;
-					System.out.println(stack.peek().getPasses() + " Cima " + stack.size());
-					stack.push(new Crumb(xPos, yPos));
+					stack.pop();
+					System.out.println(stack.size());
+					xPos = stack.peek().getX();
+					yPos = stack.peek().getY();
+		
 					repaint();
 				}
-				crumb.incrementPasses();
+				
+				yBot = yPos * SIZE + SIZE / 2;
+				xBot = xPos * SIZE + SIZE / 2;
+				
+				System.out.println(yBot - SIZE / 2);
+				System.out.println(xBot - SIZE / 2);
+		
 			}
-	
-			
-			else if(stack.peek().getPasses() == 3) {
-				if(yPos < height-1 && labirinto[yPos+1][xPos]) {
-					// Baixo
-					labirinto[yPos][xPos] = false;
-					yPos++;
-					System.out.println(stack.peek().getPasses() + " Baixo " + stack.size());
-					stack.push(new Crumb(xPos, yPos));
-					repaint();
-				}
-				crumb.incrementPasses();
-			}
-			
-			
-			else if(stack.peek().getPasses() == 4){
-				// Terminou este passo
-				labirinto[yPos][xPos] = false;
-				stack.pop();
-				System.out.println(stack.size());
-				xPos = stack.peek().getX();
-				yPos = stack.peek().getY();
-	
-				repaint();
-			}
-			
-			yBot = yPos * SIZE + SIZE / 2;
-			xBot = xPos * SIZE + SIZE / 2;
-			
 		} catch(EmptyStackException e) {
 			// Caso a stack esteja vazia, isso significa que a IA já varreu todos os pontos do labirinto
 			System.out.println("Já varri todas as opções existentes nesse labirinto!");
 		
 		}
 	}	
+	
 	public static boolean[][] deepCopy(boolean[][] original) {
 	    // Hash, me desculpe, mas roubei este método de um generoso 
 		// senhor que ensinava como copiar os valores de uma matriz
