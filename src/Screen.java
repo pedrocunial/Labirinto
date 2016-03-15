@@ -21,7 +21,7 @@ import javax.swing.Timer;
 public class Screen extends JPanel implements ActionListener, KeyListener {
 	private static final long serialVersionUID = 1L;
 
-	private final static int CELL_SIZE = 25;
+	private final static int CELL_SIZE = 25; // Caso o jogo esteja muito pequeno na sua resolução, altere este valor
 	
 	private static final int SIZE = CELL_SIZE;
 
@@ -88,8 +88,8 @@ public class Screen extends JPanel implements ActionListener, KeyListener {
 		yMeme = yMeme * SIZE;
 		System.out.println("xMeme: " + xMeme + " yMeme: " + yMeme);
 					
-		image = new ImageIcon(getClass().getResource("/img/fabiomiranda.png")).getImage();
-		imageBot = new ImageIcon(getClass().getResource("/img/example.png")).getImage();
+		image = new ImageIcon(getClass().getResource("/img/fabiomiranda-cortado.png")).getImage();
+		imageBot = new ImageIcon(getClass().getResource("/img/luciano.png")).getImage();
 		meme = new ImageIcon(getClass().getResource("/img/python-logo.png")).getImage();
 		
 		int xPos = (xBot - SIZE / 2) / SIZE;
