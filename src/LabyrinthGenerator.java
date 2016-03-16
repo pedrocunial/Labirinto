@@ -108,7 +108,7 @@ public class LabyrinthGenerator {
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Screen screen = new Screen(labyrinth);
+                Screen screen = new Screen(ReadFile.getLabyrinth());
 
                 JFrame frame = new JFrame("Onde está o Python?");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
