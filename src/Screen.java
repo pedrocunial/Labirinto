@@ -21,7 +21,8 @@ import javax.swing.Timer;
 public class Screen extends JPanel implements ActionListener, KeyListener {
 	private static final long serialVersionUID = 1L;
 
-	private final static int CELL_SIZE = 25; // Caso o jogo esteja muito pequeno na sua resolução, altere este valor
+	// Caso o jogo esteja muito pequeno ou grande na sua resolução, altere este valor
+	private final static int CELL_SIZE = 25;
 	
 	private static final int SIZE = CELL_SIZE;
 
